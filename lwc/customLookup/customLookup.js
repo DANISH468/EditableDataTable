@@ -7,8 +7,10 @@ export default class customLookUp extends LightningElement {
     @api value;
     @api objName;
     @api iconName;
+    @api recordId;
     @api filter = '';
     @api searchPlaceholder='Search';
+    @api fieldApiName;
     @track selectedName;
     @track records;
     @track isValueSelected;
@@ -44,8 +46,17 @@ export default class customLookUp extends LightningElement {
 
         let selectedId = event.currentTarget.dataset.id;
         let selectedName = event.currentTarget.dataset.name;
-        const valueSelectedEvent = new CustomEvent('lookupselected', {detail:  selectedId });
-        this.dispatchEvent(valueSelectedEvent);
+        const custEvent = CustomEvent('customfieldchange', {
+            composed: true,
+            bubbles: true,
+            cancelable: true,
+            detail : {
+                value : selectedId,
+                selectedId : this.recordId,
+                fieldApiName : this.fieldApiName
+            }
+        });
+        this.dispatchEvent(custEvent);
         this.isValueSelected = true;
         this.selectedName = selectedName;
         if(this.blurTimeout) {
@@ -69,6 +80,7 @@ export default class customLookUp extends LightningElement {
 
     renderedCallback(){
 
+      
         if(this.value == null || this.records == undefined || this.hasRendered ) return;
         this.isValueSelected = true;
         let selectedRecord = this.records.find(record => record.Id == this.value);
@@ -77,4 +89,7 @@ export default class customLookUp extends LightningElement {
         this.hasRendered = true;
 
     }
+
+   
+
 }
