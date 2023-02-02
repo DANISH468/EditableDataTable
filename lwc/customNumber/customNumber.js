@@ -11,12 +11,46 @@ export default class CustomNumber extends LightningElement {
 
     handleChange(event){
         
+        let inputField = event.target;
+
+        let isDecimalError = false;
+        //to check if decimal number is there
+        isDecimalError = !inputField.value.includes('.');
+        //reset all errors
+        inputField.setCustomValidity('');
+        inputField.reportValidity();
+     
+        if(isDecimalError){
+           
+            let inputValueLength = inputField.value.length;
+            let decimalLength = this.scale.toString().length;
+            // when decimal is not enabled
+            if(decimalLength == 1){
+                decimalLength = 0;
+            }
+            else{
+                decimalLength -= 2;
+            }
+            let totalDigitsEntered = decimalLength + inputValueLength;
+
+            if(totalDigitsEntered > this.maxLength){
+                inputField.setCustomValidity('Invalid Number');
+                inputField.reportValidity();
+                return;
+            }
+        }
+        //if there is an error dont update the value
+        if(!inputField.checkValidity() ){
+            return;
+        }
+      
+        // call custom events to update the value
         const custEvent = CustomEvent('customfieldchange', {
             composed: true,
             bubbles: true,
             cancelable: true,
             detail : {
-                value : event.detail.value,
+                value : inputField.value,
                 selectedId : this.recordId,
                 fieldApiName : this.fieldApiName
             }
