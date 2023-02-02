@@ -29,6 +29,7 @@ export default class CustomNumber extends LightningElement {
                 decimalLength = 0;
             }
             else{
+                // to igonre  deimal and first ZERO such as 0.02 we need02 only for length
                 decimalLength -= 2;
             }
             let totalDigitsEntered = decimalLength + inputValueLength;
