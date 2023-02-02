@@ -46,17 +46,7 @@ export default class customLookUp extends LightningElement {
 
         let selectedId = event.currentTarget.dataset.id;
         let selectedName = event.currentTarget.dataset.name;
-        const custEvent = CustomEvent('customfieldchange', {
-            composed: true,
-            bubbles: true,
-            cancelable: true,
-            detail : {
-                value : selectedId,
-                selectedId : this.recordId,
-                fieldApiName : this.fieldApiName
-            }
-        });
-        this.dispatchEvent(custEvent);
+        this.updateValue(selectedId,this.recordId,this.fieldApiName);
         this.isValueSelected = true;
         this.selectedName = selectedName;
         if(this.blurTimeout) {
@@ -67,6 +57,7 @@ export default class customLookUp extends LightningElement {
 
     handleRemovePill() {
         this.isValueSelected = false;
+        this.updateValue(null,this.recordId,this.fieldApiName);//reset the value thorugh events
     }
 
     constructor(){
@@ -88,6 +79,21 @@ export default class customLookUp extends LightningElement {
         this.boxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus';
         this.hasRendered = true;
 
+    }
+
+    updateValue(selectedId,recordId,fieldApiName){
+
+        const custEvent = CustomEvent('customfieldchange', {
+            composed: true,
+            bubbles: true,
+            cancelable: true,
+            detail : {
+                value : selectedId,
+                selectedId : recordId,
+                fieldApiName : fieldApiName
+            }
+        });
+        this.dispatchEvent(custEvent);
     }
 
    
